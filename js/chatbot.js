@@ -394,12 +394,14 @@ async function buildResponse(text) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: chatHistory, ctx: { cars, offers } }),
     });
+    if (!resp.ok) throw new Error('api_error');
     const data = await resp.json();
-    const reply = data.reply || 'Erreur — contactez-nous sur WhatsApp.';
-    chatHistory.push({ role: 'assistant', content: reply });
-    return reply;
+    if (!data.reply) throw new Error('empty_reply');
+    chatHistory.push({ role: 'assistant', content: data.reply });
+    return data.reply;
   } catch {
     // fallback local
+    chatHistory.pop(); // remove user msg added above, local bot doesn't need history
     chatLang = detectLang(text);
     const intent = getIntent(text);
     return respond(intent, text);
