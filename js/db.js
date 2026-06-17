@@ -7,7 +7,7 @@
 //  3. Copiez l'URL (ex: https://mon-projet-default-rtdb.firebaseio.com)
 //  4. Dans Règles, mettez: { "rules": { ".read": true, ".write": true } }
 // ============================================================
-const FB_URL = 'https://v1-claude-code-35dce-default-rtdb.firebaseio.com';
+const FB_URL = (typeof SITE !== 'undefined' && SITE.firebaseUrl) ? SITE.firebaseUrl : 'YOUR_PROJECT';
 
 const FB_KEYS = [
   'md_cars','md_reservations','md_offers','md_blocks',
