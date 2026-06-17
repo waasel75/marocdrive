@@ -359,6 +359,42 @@
         <button class="s-btn-save" onclick="saveSiteSettings()">💾 Enregistrer les paramètres</button>
         <div class="s-save-msg" id="sSaveMsg"></div>
 
+        <div class="s-section-title" style="margin-top:30px">🚗 Mode de réservation</div>
+        <div class="s-row" style="margin-bottom:12px">
+          <label class="s-radio-card" id="rcDelivery" onclick="setBookingMode('delivery')">
+            <input type="radio" name="bookingMode" value="delivery" id="rmDelivery"/>
+            <span><strong>🚚 Option 1 — Livraison</strong><br><small>Vous livrez le véhicule dans les villes et aéroports</small></span>
+          </label>
+          <label class="s-radio-card" id="rcPickup" onclick="setBookingMode('pickup')">
+            <input type="radio" name="bookingMode" value="pickup" id="rmPickup"/>
+            <span><strong>🏢 Option 2 — Retrait agence</strong><br><small>Client vient chercher la voiture chez vous</small></span>
+          </label>
+        </div>
+
+        <div id="deliverySection">
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+            <strong style="font-size:.88rem">🏙️ Villes</strong>
+            <button class="s-btn-sm" onclick="addDeliveryCity()">+ Ajouter</button>
+          </div>
+          <div id="deliveryCityList" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
+
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+            <strong style="font-size:.88rem">✈️ Aéroports</strong>
+            <button class="s-btn-sm" onclick="addDeliveryAirport()">+ Ajouter</button>
+          </div>
+          <div id="deliveryAirportList" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
+        </div>
+
+        <div id="pickupSection" style="display:none">
+          <div class="s-field">
+            <label>Adresse / lieu de retrait</label>
+            <input type="text" id="pickupAddress" class="s-input" placeholder="Ex: Notre agence — Tétouan, Bd Mohammed V"/>
+          </div>
+        </div>
+
+        <button class="s-btn" onclick="saveBookingConfig()">💾 Enregistrer le mode</button>
+        <div class="s-save-msg" id="bookingSaveMsg"></div>
+
         <div class="s-section-title" style="margin-top:30px;color:#e63329">⚠️ Zone dangereuse</div>
         <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:10px">Supprime toutes les données (réservations, voitures, offres, conversations) pour repartir d'un site 100% propre. Utile avant de livrer le site à un nouveau client/agence.</p>
         <button class="s-btn-red" onclick="factoryReset()">🗑️ Réinitialiser tout le site</button>

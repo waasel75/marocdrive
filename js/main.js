@@ -65,9 +65,33 @@ function applyBranding(cfg) {
   });
 }
 
+function applyBookingConfig() {
+  const bc = JSON.parse(localStorage.getItem('md_booking_config') || '{"mode":"delivery","cities":[],"airports":[]}');
+  const pickupSel = document.querySelector('[data-t="pickup-select"]');
+  const mCitySel  = document.getElementById('mCity');
+  [pickupSel, mCitySel].forEach(sel => {
+    if (!sel) return;
+    const saved = sel.value;
+    sel.innerHTML = '<option value="">Choisir un lieu</option>';
+    if (bc.mode === 'pickup') {
+      const addr = bc.pickupAddress || 'Notre agence';
+      sel.innerHTML += `<option value="${addr}">${addr}</option>`;
+    } else {
+      if (bc.cities?.length) {
+        sel.innerHTML += `<optgroup label="🏙️ Villes">${bc.cities.map(c=>`<option>${c}</option>`).join('')}</optgroup>`;
+      }
+      if (bc.airports?.length) {
+        sel.innerHTML += `<optgroup label="✈️ Aéroports">${bc.airports.map(a=>`<option>✈️ ${a}</option>`).join('')}</optgroup>`;
+      }
+    }
+    if (saved) sel.value = saved;
+  });
+}
+
 function applySiteConfig() {
   const cfg = getSiteConfig();
   applyBranding(cfg);
+  applyBookingConfig();
   applyAboutImages(cfg.aboutImages);
   const heroBg = document.getElementById('heroBg');
   if (heroBg && cfg.heroBg) heroBg.style.backgroundImage = `url('${cfg.heroBg}')`;

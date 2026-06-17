@@ -199,3 +199,15 @@ body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--w
   .s-nav { flex-direction: row; padding: 0; gap: 6px; }
   .s-sidebar-footer { flex-direction: row; border-top: none; padding: 0; }
 }
+
+/* Booking mode */
+.s-radio-card { display:flex; align-items:flex-start; gap:10px; padding:12px 16px; border:1.5px solid var(--border); border-radius:12px; cursor:pointer; flex:1; transition:var(--transition); }
+.s-radio-card:hover { border-color:rgba(230,51,41,0.4); }
+.s-radio-card.active { border-color:var(--red); background:rgba(230,51,41,0.07); }
+.s-radio-card input { margin-top:3px; accent-color:var(--red); }
+.s-radio-card small { color:var(--text-muted); font-size:.78rem; }
+.s-tag { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; background:rgba(255,255,255,0.07); border:1px solid var(--border); border-radius:20px; font-size:.8rem; }
+.s-tag button { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:.9rem; line-height:1; padding:0; }
+.s-tag button:hover { color:#e63329; }
+.s-btn-sm { padding:5px 12px; background:rgba(230,51,41,0.1); border:1px solid rgba(230,51,41,0.3); color:var(--red); border-radius:8px; font-size:.8rem; font-weight:600; cursor:pointer; font-family:inherit; transition:var(--transition); }
+.s-btn-sm:hover { background:rgba(230,51,41,0.2); }

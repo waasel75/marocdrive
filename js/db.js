@@ -11,7 +11,7 @@ const FB_URL = (typeof SITE !== 'undefined' && SITE.firebaseUrl) ? SITE.firebase
 
 const FB_KEYS = [
   'md_cars','md_reservations','md_offers','md_blocks',
-  'md_site_settings','md_chat_conversations','md_chat_config'
+  'md_site_settings','md_chat_conversations','md_chat_config','md_booking_config'
 ];
 
 function _fbPath(lsKey) {
