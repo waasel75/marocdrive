@@ -211,3 +211,9 @@ body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--w
 .s-tag button:hover { color:#e63329; }
 .s-btn-sm { padding:5px 12px; background:rgba(230,51,41,0.1); border:1px solid rgba(230,51,41,0.3); color:var(--red); border-radius:8px; font-size:.8rem; font-weight:600; cursor:pointer; font-family:inherit; transition:var(--transition); }
 .s-btn-sm:hover { background:rgba(230,51,41,0.2); }
+.delivery-group { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+.delivery-group-header { font-size:.85rem; font-weight:600; color:var(--text-muted); margin-bottom:10px; letter-spacing:.02em; }
+.delivery-tag-list { display:flex; flex-wrap:wrap; gap:6px; min-height:28px; margin-bottom:10px; }
+.delivery-tag-list:empty::after { content:'Aucun élément'; font-size:.78rem; color:var(--text-muted); font-style:italic; }
+.delivery-add-row { display:flex; gap:8px; align-items:center; }
+.delivery-add-row .s-input { flex:1; padding:7px 12px; font-size:.85rem; }

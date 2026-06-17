@@ -719,19 +719,19 @@ if (sessionStorage.getItem('md_settings') === '1') {
 }
 
 /* ===== BOOKING CONFIG ===== */
-let _bookingCities = [];
-let _bookingAirports = [];
+let _bCities = [], _bAirports = [], _bHotels = [];
 
 function loadBookingConfig() {
-  const cfg = JSON.parse(localStorage.getItem('md_booking_config') || '{"mode":"delivery","cities":[],"airports":[],"pickupAddress":""}');
-  _bookingCities = cfg.cities || [];
-  _bookingAirports = cfg.airports || [];
-  setBookingMode(cfg.mode || 'delivery', false);
+  const cfg = JSON.parse(localStorage.getItem('md_booking_config') || '{}');
+  _bCities   = cfg.cities   || [];
+  _bAirports = cfg.airports || [];
+  _bHotels   = cfg.hotels   || [];
+  setBookingMode(cfg.mode || 'delivery');
   document.getElementById('pickupAddress').value = cfg.pickupAddress || '';
   renderDeliveryTags();
 }
 
-function setBookingMode(mode, save) {
+function setBookingMode(mode) {
   document.getElementById('rmDelivery').checked = mode === 'delivery';
   document.getElementById('rmPickup').checked   = mode === 'pickup';
   document.getElementById('rcDelivery').classList.toggle('active', mode === 'delivery');
@@ -741,31 +741,31 @@ function setBookingMode(mode, save) {
 }
 
 function renderDeliveryTags() {
-  const cl = document.getElementById('deliveryCityList');
-  const al = document.getElementById('deliveryAirportList');
-  cl.innerHTML = _bookingCities.map((c,i) => `<span class="s-tag">${c}<button onclick="_bookingCities.splice(${i},1);renderDeliveryTags()">×</button></span>`).join('');
-  al.innerHTML = _bookingAirports.map((a,i) => `<span class="s-tag">${a}<button onclick="_bookingAirports.splice(${i},1);renderDeliveryTags()">×</button></span>`).join('');
+  const tag = (arr, key, i) =>
+    `<span class="s-tag">${arr[i]}<button onclick="_b${key}.splice(${i},1);renderDeliveryTags()">×</button></span>`;
+  document.getElementById('deliveryCityList').innerHTML    = _bCities.map((_,i)=>tag(_bCities,'Cities',i)).join('');
+  document.getElementById('deliveryAirportList').innerHTML = _bAirports.map((_,i)=>tag(_bAirports,'Airports',i)).join('');
+  document.getElementById('deliveryHotelList').innerHTML   = _bHotels.map((_,i)=>tag(_bHotels,'Hotels',i)).join('');
 }
 
-function addDeliveryCity() {
-  const v = prompt('Nom de la ville :');
-  if (v && v.trim()) { _bookingCities.push(v.trim()); renderDeliveryTags(); }
-}
-
-function addDeliveryAirport() {
-  const v = prompt('Nom de l\'aéroport :');
-  if (v && v.trim()) { _bookingAirports.push(v.trim()); renderDeliveryTags(); }
+function addDeliveryItem(type) {
+  const ids = { city:'inputCity', airport:'inputAirport', hotel:'inputHotel' };
+  const arrs = { city:_bCities, airport:_bAirports, hotel:_bHotels };
+  const inp = document.getElementById(ids[type]);
+  const v = inp.value.trim();
+  if (!v) return;
+  arrs[type].push(v);
+  inp.value = '';
+  inp.focus();
+  renderDeliveryTags();
 }
 
 function saveBookingConfig() {
   const mode = document.querySelector('input[name="bookingMode"]:checked')?.value || 'delivery';
-  const cfg = {
-    mode,
-    cities: _bookingCities,
-    airports: _bookingAirports,
+  localStorage.setItem('md_booking_config', JSON.stringify({
+    mode, cities: _bCities, airports: _bAirports, hotels: _bHotels,
     pickupAddress: document.getElementById('pickupAddress').value.trim()
-  };
-  localStorage.setItem('md_booking_config', JSON.stringify(cfg));
+  }));
   const msg = document.getElementById('bookingSaveMsg');
   msg.textContent = '✅ Enregistré !'; msg.style.opacity = '1';
   setTimeout(() => msg.style.opacity = '0', 2500);

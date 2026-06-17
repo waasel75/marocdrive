@@ -372,17 +372,32 @@
         </div>
 
         <div id="deliverySection">
-          <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
-            <strong style="font-size:.88rem">🏙️ Villes</strong>
-            <button class="s-btn-sm" onclick="addDeliveryCity()">+ Ajouter</button>
+          <div class="delivery-group">
+            <div class="delivery-group-header">🏙️ Villes</div>
+            <div id="deliveryCityList" class="delivery-tag-list"></div>
+            <div class="delivery-add-row">
+              <input type="text" id="inputCity" class="s-input" placeholder="Ex: Casablanca" onkeydown="if(event.key==='Enter')addDeliveryItem('city')"/>
+              <button class="s-btn-sm" onclick="addDeliveryItem('city')">+ Ajouter</button>
+            </div>
           </div>
-          <div id="deliveryCityList" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
 
-          <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
-            <strong style="font-size:.88rem">✈️ Aéroports</strong>
-            <button class="s-btn-sm" onclick="addDeliveryAirport()">+ Ajouter</button>
+          <div class="delivery-group">
+            <div class="delivery-group-header">✈️ Aéroports</div>
+            <div id="deliveryAirportList" class="delivery-tag-list"></div>
+            <div class="delivery-add-row">
+              <input type="text" id="inputAirport" class="s-input" placeholder="Ex: Aéroport Casablanca CMN" onkeydown="if(event.key==='Enter')addDeliveryItem('airport')"/>
+              <button class="s-btn-sm" onclick="addDeliveryItem('airport')">+ Ajouter</button>
+            </div>
           </div>
-          <div id="deliveryAirportList" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
+
+          <div class="delivery-group">
+            <div class="delivery-group-header">🏨 Hôtels / Riads</div>
+            <div id="deliveryHotelList" class="delivery-tag-list"></div>
+            <div class="delivery-add-row">
+              <input type="text" id="inputHotel" class="s-input" placeholder="Ex: Hôtel / Riad (préciser à la réservation)" onkeydown="if(event.key==='Enter')addDeliveryItem('hotel')"/>
+              <button class="s-btn-sm" onclick="addDeliveryItem('hotel')">+ Ajouter</button>
+            </div>
+          </div>
         </div>
 
         <div id="pickupSection" style="display:none">

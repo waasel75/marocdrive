@@ -77,12 +77,9 @@ function applyBookingConfig() {
       const addr = bc.pickupAddress || 'Notre agence';
       sel.innerHTML += `<option value="${addr}">${addr}</option>`;
     } else {
-      if (bc.cities?.length) {
-        sel.innerHTML += `<optgroup label="🏙️ Villes">${bc.cities.map(c=>`<option>${c}</option>`).join('')}</optgroup>`;
-      }
-      if (bc.airports?.length) {
-        sel.innerHTML += `<optgroup label="✈️ Aéroports">${bc.airports.map(a=>`<option>✈️ ${a}</option>`).join('')}</optgroup>`;
-      }
+      if (bc.cities?.length)   sel.innerHTML += `<optgroup label="🏙️ Villes">${bc.cities.map(c=>`<option>${c}</option>`).join('')}</optgroup>`;
+      if (bc.airports?.length) sel.innerHTML += `<optgroup label="✈️ Aéroports">${bc.airports.map(a=>`<option>✈️ ${a}</option>`).join('')}</optgroup>`;
+      if (bc.hotels?.length)   sel.innerHTML += `<optgroup label="🏨 Hôtels / Riads">${bc.hotels.map(h=>`<option>🏨 ${h}</option>`).join('')}</optgroup>`;
     }
     if (saved) sel.value = saved;
   });
