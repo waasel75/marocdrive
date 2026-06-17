@@ -378,12 +378,32 @@ function respond(intent, tx) {
   });
 }
 
-/* ── MAIN ENTRY ── */
-function buildResponse(text) {
-  chatLang = detectLang(text);
-  ctx.turn++;
-  const intent = getIntent(text);
-  return respond(intent, text);
+/* ── MAIN ENTRY — GPT via Netlify Function ── */
+let chatHistory = [];
+
+async function buildResponse(text) {
+  chatHistory.push({ role: 'user', content: text });
+  if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10);
+
+  const cars = liveCars().map(c => `${c.name} ${c.price}MAD/j`).join(', ');
+  const offers = liveOffers().map(o => `-${o.discount}% ${o.title}`).join(', ') || 'aucune';
+
+  try {
+    const resp = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory, ctx: { cars, offers } }),
+    });
+    const data = await resp.json();
+    const reply = data.reply || 'Erreur — contactez-nous sur WhatsApp.';
+    chatHistory.push({ role: 'assistant', content: reply });
+    return reply;
+  } catch {
+    // fallback local
+    chatLang = detectLang(text);
+    const intent = getIntent(text);
+    return respond(intent, text);
+  }
 }
 
 /* ── UI ── */
@@ -454,19 +474,28 @@ function addMsg(content, role) {
 }
 function addBotMsg(text) { addMsg(text, 'bot'); }
 
-function sendChat() {
+async function sendChat() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text) return;
   input.value = '';
+  input.disabled = true;
   addMsg(text, 'user');
   const msgs = document.getElementById('chatMessages');
   const typing = document.createElement('div');
   typing.className = 'chat-msg bot chat-typing';
   typing.innerHTML = '<div class="chat-bubble"><span></span><span></span><span></span></div>';
   msgs.appendChild(typing); msgs.scrollTop = msgs.scrollHeight;
-  const delay = 700 + Math.min(text.length * 12, 900);
-  setTimeout(() => { try { msgs.removeChild(typing); } catch(e){} addBotMsg(buildResponse(text)); }, delay);
+  try {
+    const reply = await buildResponse(text);
+    msgs.removeChild(typing);
+    addBotMsg(reply);
+  } catch {
+    msgs.removeChild(typing);
+    addBotMsg('Désolé, une erreur est survenue. Contactez-nous sur WhatsApp 📱');
+  }
+  input.disabled = false;
+  input.focus();
 }
 
 /* ── BOOT ── */
