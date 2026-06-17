@@ -741,11 +741,22 @@ function setBookingMode(mode) {
 }
 
 function renderDeliveryTags() {
-  const tag = (arr, key, i) =>
-    `<span class="s-tag">${arr[i]}<button onclick="_b${key}.splice(${i},1);renderDeliveryTags()">×</button></span>`;
-  document.getElementById('deliveryCityList').innerHTML    = _bCities.map((_,i)=>tag(_bCities,'Cities',i)).join('');
-  document.getElementById('deliveryAirportList').innerHTML = _bAirports.map((_,i)=>tag(_bAirports,'Airports',i)).join('');
-  document.getElementById('deliveryHotelList').innerHTML   = _bHotels.map((_,i)=>tag(_bHotels,'Hotels',i)).join('');
+  function makeList(el, arr, type) {
+    el.innerHTML = '';
+    arr.forEach((val, i) => {
+      const span = document.createElement('span');
+      span.className = 's-tag';
+      span.innerHTML = `${val} `;
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.onclick = () => { arr.splice(i, 1); renderDeliveryTags(); };
+      span.appendChild(btn);
+      el.appendChild(span);
+    });
+  }
+  makeList(document.getElementById('deliveryCityList'),    _bCities,   'city');
+  makeList(document.getElementById('deliveryAirportList'), _bAirports, 'airport');
+  makeList(document.getElementById('deliveryHotelList'),   _bHotels,   'hotel');
 }
 
 function addDeliveryItem(type) {
