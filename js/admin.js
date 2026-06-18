@@ -366,8 +366,10 @@ function renderStats() {
 function sendWA(id) {
   const r = getAll().find(r=>r.id==id);
   if (!r) return;
+  const phone = (r.phone || '').replace(/\D/g,'');
+  const dest  = phone.startsWith('0') ? '212' + phone.slice(1) : phone || WA;
   const msg = `🚗 *Réservation MarocDrive*\n\n👤 *Nom :* ${r.name}\n📞 *Tél :* ${r.phone}${r.email?'\n✉️ *Email :* '+r.email:''}\n📍 *Lieu :* ${r.city||'—'}\n🚘 *Véhicule :* ${r.car}\n📅 *Départ :* ${fmt(r.start)}\n📅 *Retour :* ${fmt(r.end)}\n⏱ *Durée :* ${r.days} jour${r.days>1?'s':''}\n💰 *Total :* ${fmtN(r.total)} MAD\n${STATUS[r.status].icon} *Statut :* ${STATUS[r.status].label}`;
-  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
+  window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 /* ===== EXPORT EXCEL ===== */

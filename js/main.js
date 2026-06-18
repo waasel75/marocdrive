@@ -944,11 +944,12 @@ function buildConfirmation() {
 _Envoyé depuis le site MarocDrive_`;
 
   const waUrl = `https://wa.me/${getSiteConfig().wa}?text=` + encodeURIComponent(msg);
-  // Save to DB
+
   saveReservation({ id: Date.now(), car: activeCarData.name, carPrice: activeCarData.price,
     name, phone, email, city, start: s, end: e, days, total, status:'pending', createdAt: new Date().toISOString() });
 
-  setTimeout(() => window.open(waUrl, '_blank'), 600);
+  const waBtn = document.getElementById('confirmWABtn');
+  if (waBtn) waBtn.href = waUrl;
 }
 
 /* ===== PHOTO MODAL ===== */

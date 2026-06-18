@@ -549,10 +549,11 @@
       <!-- Step 3: Confirmation -->
       <div class="modal-step" id="mStep3" style="display:none">
         <div class="confirm-icon">✅</div>
-        <h3 class="modal-step-title" style="text-align:center">Réservation confirmée !</h3>
+        <h3 class="modal-step-title" style="text-align:center">Réservation enregistrée !</h3>
         <div class="confirm-summary" id="confirmSummary"></div>
-        <p class="confirm-note">Notre équipe vous contactera dans les <strong>30 minutes</strong> pour finaliser votre réservation.</p>
-        <button class="btn btn-primary w-full" onclick="closeBookingModal()">Parfait, merci !</button>
+        <p class="confirm-note">Cliquez sur WhatsApp pour finaliser votre réservation avec notre équipe.</p>
+        <a id="confirmWABtn" href="#" target="_blank" class="btn btn-primary w-full" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;margin-bottom:10px">📲 Envoyer via WhatsApp</a>
+        <button class="btn btn-outline w-full" onclick="closeBookingModal()">Fermer</button>
       </div>
     </div>
   </div>
