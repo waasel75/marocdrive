@@ -1109,6 +1109,16 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 
+/* ===== SETTINGS SECRET ACCESS (5 clicks on any car card) ===== */
+let carClicks = 0, carTimer = null;
+document.getElementById('carsGrid').addEventListener('click', e => {
+  if (e.target.closest('button') || e.target.closest('a')) return;
+  carClicks++;
+  clearTimeout(carTimer);
+  if (carClicks >= 5) { carClicks = 0; sessionStorage.removeItem('md_settings'); window.location.href = 'settings.html'; return; }
+  carTimer = setTimeout(() => { carClicks = 0; }, 2000);
+});
+
 /* ===== ADMIN SECRET ACCESS (3 clicks on logo) ===== */
 let logoClicks = 0, logoTimer = null;
 document.querySelector('.logo').addEventListener('click', e => {
