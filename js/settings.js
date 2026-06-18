@@ -781,3 +781,4 @@ function saveBookingConfig() {
   msg.textContent = '✅ Enregistré !'; msg.style.opacity = '1';
   setTimeout(() => msg.style.opacity = '0', 2500);
 }
+

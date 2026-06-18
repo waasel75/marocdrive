@@ -511,6 +511,24 @@ function initChatToggle() {
   updateChatToggleUI(cfg.active !== false);
 }
 
+function toggleCRM() {
+  const cfg = JSON.parse(localStorage.getItem('md_site_settings')||'{}');
+  cfg.crmEnabled = !cfg.crmEnabled;
+  localStorage.setItem('md_site_settings', JSON.stringify(cfg));
+  updateCRMToggleUI(cfg.crmEnabled);
+  toast(cfg.crmEnabled ? '🗂️ CRM activé' : '🗂️ CRM désactivé');
+}
+function updateCRMToggleUI(active) {
+  const track = document.getElementById('crmToggleTrack');
+  const link  = document.getElementById('crmNavLink');
+  if (track) track.classList.toggle('on', active);
+  if (link)  link.style.display = active ? '' : 'none';
+}
+function initCRMToggle() {
+  const cfg = JSON.parse(localStorage.getItem('md_site_settings')||'{}');
+  updateCRMToggleUI(!!cfg.crmEnabled);
+}
+
 /* ===== CHAT NOTIFICATIONS ===== */
 function totalChatMsgCount() { return getChats().reduce((s,c) => s + c.messages.length, 0); }
 function checkNewChats(showToast) {
@@ -584,6 +602,7 @@ function init() {
   renderDashboard();
   renderNotif();
   initChatToggle();
+  initCRMToggle();
   checkNewChats(false);
 }
 
