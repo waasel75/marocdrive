@@ -5,7 +5,7 @@ function getSiteConfig() {
   const cfg = JSON.parse(localStorage.getItem('md_site_settings') || '{}');
   return {
     phone: cfg.phone || '+212 634 829 085',
-    wa: (cfg.wa || '212634829085').replace(/\D/g,''),
+    wa: (r => r.startsWith('0') ? '212' + r.slice(1) : r)((cfg.wa || '212634829085').replace(/\D/g,'')),
     social: cfg.social || {},
     mapsLink: cfg.mapsLink || '',
     name: cfg.name || 'MarocDrive',
