@@ -26,9 +26,9 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           port: 21
-          # Hostinger web root for the main domain. If your FTP account
-          # already opens inside public_html, change this to "./".
-          server-dir: /public_html/
+          # Hostinger web root for chakrouncars.com (FTP login lands at /,
+          # the site lives under domains/<domain>/public_html).
+          server-dir: /domains/chakrouncars.com/public_html/
           local-dir: ./
           # Don't upload dev/config files that aren't part of the website
           exclude: |
