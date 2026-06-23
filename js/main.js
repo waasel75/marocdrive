@@ -3,17 +3,18 @@
 /* ===== SITE CONFIG (from settings panel) ===== */
 function getSiteConfig() {
   const cfg = JSON.parse(localStorage.getItem('md_site_settings') || '{}');
+  const s = (typeof SITE !== 'undefined') ? SITE : {};
   return {
-    phone: cfg.phone || '+212 634 829 085',
-    wa: (r => r.startsWith('0') ? '212' + r.slice(1) : r)((cfg.wa || '212634829085').replace(/\D/g,'')),
+    phone: cfg.phone || s.phone || '+212 634 829 085',
+    wa: (r => r.startsWith('0') ? '212' + r.slice(1) : r)((cfg.wa || s.whatsapp || '212634829085').replace(/\D/g,'')),
     social: cfg.social || {},
     mapsLink: cfg.mapsLink || '',
-    name: cfg.name || 'Chakroun Cars',
-    logo: cfg.logo || '',
+    name: cfg.name || s.name || 'Chakroun Cars',
+    logo: cfg.logo || s.logo || '',
     aboutImages: (cfg.aboutImages || []).filter(Boolean),
     heroBg: cfg.heroBg || '',
     heroCar: cfg.heroCar || '',
-    email: cfg.email || '',
+    email: cfg.email || s.email || '',
     address: cfg.address || '',
   };
 }
