@@ -24,8 +24,12 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
+          protocol: ftps
           port: 21
+          # Hostinger's cloud-facing FTP can be slow to answer; give it room
+          # and accept its TLS cert (shared-host cert won't match the IP).
+          timeout: 120000
+          security: loose
           # Hostinger web root for chakrouncars.com (FTP login lands at /,
           # the site lives under domains/<domain>/public_html).
           server-dir: /domains/chakrouncars.com/public_html/
