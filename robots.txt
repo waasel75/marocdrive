@@ -5,4 +5,4 @@ Disallow: /admin-master.html
 Disallow: /crm.html
 Disallow: /settings.html
 
-Sitemap: https://www.chakrouncars.com/sitemap.xml
+Sitemap: https://chakrouncars.com/sitemap.xml
