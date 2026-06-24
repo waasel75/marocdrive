@@ -14,15 +14,24 @@ const STATUS = {
 function applyAdminBranding() {
   const cfg = JSON.parse(localStorage.getItem('md_site_settings') || '{}');
   const name = cfg.name || 'Chakroun Cars';
-  const isImg = /^(https?:|data:)/.test(cfg.logo || '') || /\.(png|jpe?g|svg|webp|gif)$/i.test(cfg.logo || '');
-  const icon = isImg ? `<img src="${cfg.logo}" alt="" style="height:1.2em;vertical-align:middle;object-fit:contain"/>` : (cfg.logo || '🚗');
-  const words = name.trim().split(' ');
-  const last = words.pop();
-  const nameHtml = (words.length ? esc(words.join(' ')) + ' ' : '') + `<strong>${esc(last)}</strong>`;
+  const customLogo = (cfg.logo || '').trim();
+  const isImg = /^(https?:|data:)/.test(customLogo) || /\.(png|jpe?g|svg|webp|gif)$/i.test(customLogo);
+  // Default brand = the site logo image (its wordmark already includes the name).
+  // A custom image logo replaces it; a custom emoji/text logo keeps the name beside it.
+  let brand;
+  if (!customLogo || isImg) {
+    const src = isImg ? customLogo : 'images/logo.png';
+    brand = `<img src="${src}" alt="${esc(name)}" style="height:30px;width:auto;vertical-align:middle;object-fit:contain"/>`;
+  } else {
+    const words = name.trim().split(' ');
+    const last = words.pop();
+    const nameHtml = (words.length ? esc(words.join(' ')) + ' ' : '') + `<strong>${esc(last)}</strong>`;
+    brand = `${customLogo} ${nameHtml}`;
+  }
   const loginLogo = document.getElementById('brandLoginLogo');
-  if (loginLogo) loginLogo.innerHTML = `${icon} ${nameHtml} <span>Admin</span>`;
+  if (loginLogo) loginLogo.innerHTML = `${brand} <span>Admin</span>`;
   const sbLogo = document.getElementById('brandSbLogo');
-  if (sbLogo) sbLogo.innerHTML = `${icon} ${nameHtml}`;
+  if (sbLogo) sbLogo.innerHTML = brand;
   if (document.title.includes('Chakroun Cars')) document.title = document.title.replace(/Chakroun Cars/g, name);
 }
 applyAdminBranding();
