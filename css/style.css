@@ -426,7 +426,25 @@ input, select, textarea, button { font-family: inherit; }
   font-size: 1.1rem;
   color: var(--text-muted);
   margin-bottom: 40px;
-  max-width: 540px;
+  max-width: 580px;
+}
+.hero-deliver {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 9px 18px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  line-height: 1.6;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+}
+@media (max-width: 600px) {
+  .hero-deliver { font-size: 0.8rem; padding: 8px 14px; margin-top: 12px; }
 }
 
 /* ===== BOOKING METHODS ===== */
