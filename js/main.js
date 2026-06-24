@@ -201,7 +201,7 @@ const LANGS = {
       dateStart: '📅 Date de début',
       dateEnd: '📅 Date de fin',
       searchBtn: 'Rechercher',
-      stats: ['Véhicules', 'Villes', 'Clients satisfaits', "Ans d'expérience"],
+      stats: ['Villes', 'Clients satisfaits', "Ans d'expérience"],
     },
     features: [
       { icon:'🛡️', title:'Assurance complète', text:'Tous nos véhicules sont couverts par une assurance tous risques incluse dans le prix.' },
@@ -260,7 +260,7 @@ const LANGS = {
       dateStart: '📅 Start Date',
       dateEnd: '📅 End Date',
       searchBtn: 'Search',
-      stats: ['Vehicles', 'Cities', 'Happy Clients', 'Years Experience'],
+      stats: ['Cities', 'Happy Clients', 'Years Experience'],
     },
     features: [
       { icon:'🛡️', title:'Full Insurance', text:'All our vehicles come with comprehensive all-risk insurance included in the price.' },
@@ -319,7 +319,7 @@ const LANGS = {
       dateStart: '📅 Fecha de inicio',
       dateEnd: '📅 Fecha de fin',
       searchBtn: 'Buscar',
-      stats: ['Vehículos', 'Ciudades', 'Clientes satisfechos', 'Años de experiencia'],
+      stats: ['Ciudades', 'Clientes satisfechos', 'Años de experiencia'],
     },
     features: [
       { icon:'🛡️', title:'Seguro completo', text:'Todos nuestros vehículos tienen seguro a todo riesgo incluido en el precio.' },
@@ -378,7 +378,7 @@ const LANGS = {
       dateStart: '📅 تاريخ البداية',
       dateEnd: '📅 تاريخ النهاية',
       searchBtn: 'بحث',
-      stats: ['مركبة', 'مدينة', 'عميل راضٍ', 'سنوات خبرة'],
+      stats: ['مدينة', 'عميل راضٍ', 'سنوات خبرة'],
     },
     features: [
       { icon:'🛡️', title:'تأمين شامل', text:'جميع مركباتنا مؤمنة تأميناً شاملاً مدرجاً في السعر.' },
