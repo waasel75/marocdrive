@@ -226,7 +226,7 @@ const LANGS = {
     testimonials: { badge:'Avis Clients', title:'Ce que disent nos clients' },
     about: {
       badge: 'À propos de nous', title: 'Leader de la location de voitures au Maroc',
-      p1: 'Depuis 2016, Chakroun Cars accompagne les voyageurs et les professionnels dans leurs déplacements au Maroc. Notre flotte de plus de 500 véhicules couvre toutes les grandes villes du royaume.',
+      p1: 'Depuis 2016, Chakroun Cars accompagne les voyageurs et les professionnels dans leurs déplacements au Maroc. Notre flotte récente couvre toutes les grandes villes du royaume.',
       p2: 'Notre mission : vous offrir une expérience de location sans stress, transparente et mémorable.',
       list: ['Prix toujours affichés, sans frais cachés','Véhicules récents < 3 ans','Kilomètres illimités inclus','Assistance routière 24/7'],
       cta: 'Réserver maintenant',
@@ -285,7 +285,7 @@ const LANGS = {
     testimonials: { badge:'Client Reviews', title:'What our clients say' },
     about: {
       badge: 'About Us', title: 'Morocco\'s leading car rental company',
-      p1: 'Since 2016, Chakroun Cars has been supporting travellers and professionals in their journeys across Morocco. Our fleet of 500+ vehicles covers all major cities in the kingdom.',
+      p1: 'Since 2016, Chakroun Cars has been supporting travellers and professionals in their journeys across Morocco. Our modern fleet covers all major cities in the kingdom.',
       p2: 'Our mission: to offer you a stress-free, transparent and memorable rental experience.',
       list: ['Prices always shown, no hidden fees','Recent vehicles < 3 years old','Unlimited mileage included','24/7 roadside assistance'],
       cta: 'Book Now',
@@ -344,7 +344,7 @@ const LANGS = {
     testimonials: { badge:'Opiniones', title:'Lo que dicen nuestros clientes' },
     about: {
       badge: 'Sobre nosotros', title: 'Líder del alquiler de coches en Marruecos',
-      p1: 'Desde 2016, Chakroun Cars acompaña a viajeros y profesionales en sus desplazamientos por Marruecos. Nuestra flota de más de 500 vehículos cubre todas las grandes ciudades del reino.',
+      p1: 'Desde 2016, Chakroun Cars acompaña a viajeros y profesionales en sus desplazamientos por Marruecos. Nuestra flota reciente cubre todas las grandes ciudades del reino.',
       p2: 'Nuestra misión: ofrecerle una experiencia de alquiler sin estrés, transparente y memorable.',
       list: ['Precios siempre visibles, sin cargos ocultos','Vehículos recientes < 3 años','Kilómetros ilimitados incluidos','Asistencia en carretera 24/7'],
       cta: 'Reservar ahora',
@@ -403,7 +403,7 @@ const LANGS = {
     testimonials: { badge:'آراء العملاء', title:'ما يقوله عملاؤنا' },
     about: {
       badge: 'من نحن', title: 'الرائد في تأجير السيارات بالمغرب',
-      p1: 'منذ عام 2016، يرافق Chakroun Cars المسافرين والمهنيين في تنقلاتهم عبر المغرب. يغطي أسطولنا المؤلف من أكثر من 500 مركبة جميع المدن الكبرى في المملكة.',
+      p1: 'منذ عام 2016، يرافق Chakroun Cars المسافرين والمهنيين في تنقلاتهم عبر المغرب. يغطي أسطولنا الحديث جميع المدن الكبرى في المملكة.',
       p2: 'مهمتنا: تقديم تجربة إيجار خالية من التوتر، شفافة ولا تُنسى.',
       list: ['أسعار واضحة دائماً، بدون رسوم خفية','مركبات حديثة أقل من 3 سنوات','كيلومترات غير محدودة مشمولة','مساعدة على الطريق 24/7'],
       cta: 'احجز الآن',
