@@ -91,6 +91,7 @@ async function initApp() {
   setInterval(async () => { await syncNow(); renderCurrent(); }, 30000);
   renderNotifBadge();
   checkVidangeAlerts();
+  checkEcheanceAlerts();
 }
 
 let _currentSection = 'dashboard';
@@ -124,8 +125,12 @@ function toggleSidebar() {
 /* ── NOTIF ── */
 function renderNotifBadge() {
   const n = getRes().filter(r => r.status === 'pending').length;
+  const ech = (typeof echeanceAlerts === 'function') ? echeanceAlerts().length : 0;
   const el = document.getElementById('crmNotif');
-  if (el) { el.textContent = n ? `${n} en attente` : ''; el.style.display = n ? 'inline' : 'none'; }
+  const parts = [];
+  if (n) parts.push(`${n} en attente`);
+  if (ech) parts.push(`🔔 ${ech} échéance(s)`);
+  if (el) { el.textContent = parts.join(' · '); el.style.display = parts.length ? 'inline' : 'none'; }
 }
 
 /* ── DASHBOARD ── */
@@ -195,6 +200,7 @@ function renderDashboard() {
     </div>`;
   }).join('');
 
+  renderEcheances();
   renderNotifBadge();
 }
 
@@ -871,7 +877,11 @@ function renderVehicles() {
     }
     const st = VSTATUS[status];
     const img = (v.images&&v.images[0]) ? `<img src="${v.images[0]}" style="width:100%;height:130px;object-fit:cover;border-radius:10px;margin-bottom:10px"/>` : '';
-    return `<div class="crm-card">
+    const ins = echDateInfo(v.insurance), vis = echDateInfo(v.visit), vid = vidangeInfo(v);
+    const vidColor = vid.due ? 'var(--red)' : vid.remaining<=1000 ? 'var(--yellow)' : 'var(--green)';
+    const alertCard = ins.warn || vis.warn || vid.due || vid.remaining<=1000;
+    const infoRow = (icon,label,val,color)=>`<div style="display:flex;justify-content:space-between;gap:8px"><span style="color:var(--muted)">${icon} ${label}</span><span style="color:${color};font-weight:600;text-align:right">${val}</span></div>`;
+    return `<div class="crm-card"${alertCard?' style="border:1px solid var(--yellow)"':''}>
       ${img}
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div>
@@ -881,6 +891,11 @@ function renderVehicles() {
         <span class="badge badge-${st.cls}">${st.icon} ${st.label}</span>
       </div>
       <div style="margin-top:10px;font-size:.82rem;color:var(--muted)">${sub}</div>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;font-size:.78rem;border-top:1px solid rgba(255,255,255,.08);padding-top:10px">
+        ${ins.has ? infoRow('🛡️','Assurance',`${fmt(ins.date)} · ${ins.txt}`, ins.color) : infoRow('🛡️','Assurance','—','var(--muted)')}
+        ${vis.has ? infoRow('🔧','Visite tech.',`${fmt(vis.date)} · ${vis.txt}`, vis.color) : infoRow('🔧','Visite tech.','—','var(--muted)')}
+        ${infoRow('🛢️','Vidange', vid.due?`dépassée de ${Math.abs(vid.remaining)} km`:`${vid.remaining} km restants`, vidColor)}
+      </div>
       <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="crm-btn-sm" onclick="openVehicleCalendar(${v.id})">📅 Calendrier</button>
         <button class="crm-btn-sm" onclick="openBlockModal(${v.id})">⛔ Réserver</button>
@@ -889,6 +904,7 @@ function renderVehicles() {
       </div>
     </div>`;
   }).join('') : '<div class="crm-empty"><span class="crm-empty-icon">🚙</span>Aucun véhicule.</div>';
+  renderNotifBadge();
 }
 
 const VFIELDS = [
@@ -949,7 +965,7 @@ function saveVehicle(id) {
   const list = getVehicles();
   if (id) saveVehicles(list.map(v=>v.id===id?{...v,...data}:v));
   else { list.unshift({ id: Date.now(), ...data }); saveVehicles(list); }
-  closeModal(); renderVehicles(); checkVidangeAlerts();
+  closeModal(); renderVehicles(); checkVidangeAlerts(); checkEcheanceAlerts();
   toast('✅ Véhicule enregistré');
 }
 function deleteVehicle(id) {
@@ -1083,6 +1099,83 @@ function checkVidangeAlerts() {
     }
   });
   localStorage.setItem('md_vidange_alerted', JSON.stringify(seen));
+}
+
+/* ── ÉCHÉANCES : Assurance & Visite technique ── */
+const ECH_THRESHOLD = 10; // jours avant échéance
+function daysUntil(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr); if (isNaN(d)) return null;
+  const today = new Date(); today.setHours(0,0,0,0); d.setHours(0,0,0,0);
+  return Math.round((d - today) / 86400000);
+}
+function echLabelTxt(a) {
+  return a.expired ? `dépassée depuis ${Math.abs(a.days)}j`
+       : a.days === 0 ? `expire aujourd'hui` : `dans ${a.days}j`;
+}
+function echDateInfo(dateStr) {
+  const days = daysUntil(dateStr);
+  if (days === null) return { has:false };
+  const expired = days < 0, warn = days <= ECH_THRESHOLD;
+  return {
+    has:true, days, expired, warn, date:dateStr,
+    txt: expired ? `dépassée (${Math.abs(days)}j)` : days === 0 ? `aujourd'hui ⚠️` : `${days}j restants${warn?' ⚠️':''}`,
+    color: expired ? 'var(--red)' : warn ? 'var(--yellow)' : 'var(--green)'
+  };
+}
+function echeanceAlerts() {
+  const out = [];
+  getVehicles().forEach(v => {
+    [['insurance','Assurance','🛡️'], ['visit','Visite technique','🔧']].forEach(([key,label,icon]) => {
+      const days = daysUntil(v[key]);
+      if (days === null || days > ECH_THRESHOLD) return;
+      out.push({ id:v.id, name:v.name, plate:v.plate, key, label, icon, date:v[key], days, expired: days < 0 });
+    });
+  });
+  return out.sort((a,b)=> a.days - b.days);
+}
+function renderEcheances() {
+  const wrap = document.getElementById('dashEcheances');
+  const card = document.getElementById('dashEcheancesCard');
+  if (!wrap) return;
+  const alerts = echeanceAlerts();
+  if (!alerts.length) { if (card) card.style.display = 'none'; return; }
+  if (card) card.style.display = '';
+  wrap.innerHTML = alerts.map(a => {
+    const cls = a.expired ? 'cancelled' : (a.days <= 3 ? 'pending' : 'completed');
+    return `<div class="act-item">
+      <div class="act-info">
+        <div class="act-name">${a.icon} ${esc(a.name)} — ${a.label}</div>
+        <div class="act-sub">${esc(a.plate||'—')} · échéance ${fmt(a.date)}</div>
+      </div>
+      <div class="act-right" style="display:flex;align-items:center;gap:8px">
+        <span class="badge badge-${cls}">${echLabelTxt(a)}</span>
+        <button class="crm-btn-sm" onclick="echeanceWA(${a.id},'${a.key}')">📲</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function echeanceWA(id, key) {
+  const v = getVehicles().find(x => x.id == id); if (!v) return;
+  const label = key === 'insurance' ? 'Assurance' : 'Visite technique';
+  const days = daysUntil(v[key]);
+  const msg = `🚗 Rappel ${label}\nVéhicule: ${v.name} (${v.plate||'—'})\nÉchéance: ${fmt(v[key])} — ${echLabelTxt({days, expired: days<0})}.`;
+  window.open(`https://wa.me/${WA_CRM}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+function checkEcheanceAlerts() {
+  const today = new Date().toISOString().slice(0,10);
+  let seen = JSON.parse(localStorage.getItem('md_ech_alerted') || '{}');
+  if (seen._day !== today) seen = { _day: today }; // 1 alerte / échéance / jour
+  echeanceAlerts().forEach(a => {
+    const k = a.id + '_' + a.key;
+    if (seen[k]) return;
+    toast(`${a.icon} ${a.name} : ${a.label} ${echLabelTxt(a)}`);
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+      new Notification(`${a.icon} ${a.label} à renouveler`, { body: `${a.name} (${a.plate||'—'}) — échéance ${fmt(a.date)} (${echLabelTxt(a)})` });
+    }
+    seen[k] = 1;
+  });
+  localStorage.setItem('md_ech_alerted', JSON.stringify(seen));
 }
 
 /* ── BOOT ── */
