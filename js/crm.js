@@ -1110,6 +1110,7 @@ function daysUntil(dateStr) {
   return Math.round((d - today) / 86400000);
 }
 function echLabelTxt(a) {
+  if (a.vidange) return a.expired ? `vidange dépassée de ${Math.abs(a.remaining)} km` : `vidange dans ${a.remaining} km`;
   return a.expired ? `dépassée depuis ${Math.abs(a.days)}j`
        : a.days === 0 ? `expire aujourd'hui` : `dans ${a.days}j`;
 }
@@ -1131,6 +1132,12 @@ function echeanceAlerts() {
       if (days === null || days > ECH_THRESHOLD) return;
       out.push({ id:v.id, name:v.name, plate:v.plate, key, label, icon, date:v[key], days, expired: days < 0 });
     });
+    // Vidange (basée sur les km, pas une date) : alerte si dépassée ou proche (<=1000 km)
+    const vi = vidangeInfo(v);
+    if (vi.due || vi.remaining <= 1000) {
+      out.push({ id:v.id, name:v.name, plate:v.plate, key:'vidange', label:'Vidange', icon:'🛢️',
+        vidange:true, remaining:vi.remaining, expired:vi.due, days: vi.due ? -1 : 2 });
+    }
   });
   return out.sort((a,b)=> a.days - b.days);
 }
@@ -1143,10 +1150,11 @@ function renderEcheances() {
   if (card) card.style.display = '';
   wrap.innerHTML = alerts.map(a => {
     const cls = a.expired ? 'cancelled' : (a.days <= 3 ? 'pending' : 'completed');
+    const subline = a.vidange ? `${esc(a.plate||'—')} · entretien moteur` : `${esc(a.plate||'—')} · échéance ${fmt(a.date)}`;
     return `<div class="act-item">
       <div class="act-info">
         <div class="act-name">${a.icon} ${esc(a.name)} — ${a.label}</div>
-        <div class="act-sub">${esc(a.plate||'—')} · échéance ${fmt(a.date)}</div>
+        <div class="act-sub">${subline}</div>
       </div>
       <div class="act-right" style="display:flex;align-items:center;gap:8px">
         <span class="badge badge-${cls}">${echLabelTxt(a)}</span>
@@ -1157,6 +1165,13 @@ function renderEcheances() {
 }
 function echeanceWA(id, key) {
   const v = getVehicles().find(x => x.id == id); if (!v) return;
+  if (key === 'vidange') {
+    const vi = vidangeInfo(v);
+    const txt = vi.due ? `dépassée de ${Math.abs(vi.remaining)} km` : `dans ${vi.remaining} km`;
+    const msg = `🚗 Rappel Vidange\nVéhicule: ${v.name} (${v.plate||'—'})\nVidange ${txt}.`;
+    window.open(`https://wa.me/${WA_CRM}?text=${encodeURIComponent(msg)}`, '_blank');
+    return;
+  }
   const label = key === 'insurance' ? 'Assurance' : 'Visite technique';
   const days = daysUntil(v[key]);
   const msg = `🚗 Rappel ${label}\nVéhicule: ${v.name} (${v.plate||'—'})\nÉchéance: ${fmt(v[key])} — ${echLabelTxt({days, expired: days<0})}.`;
@@ -1171,7 +1186,7 @@ function checkEcheanceAlerts() {
     if (seen[k]) return;
     toast(`${a.icon} ${a.name} : ${a.label} ${echLabelTxt(a)}`);
     if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-      new Notification(`${a.icon} ${a.label} à renouveler`, { body: `${a.name} (${a.plate||'—'}) — échéance ${fmt(a.date)} (${echLabelTxt(a)})` });
+      new Notification(`${a.icon} ${a.label} à renouveler`, { body: `${a.name} (${a.plate||'—'}) — ${echLabelTxt(a)}` });
     }
     seen[k] = 1;
   });
