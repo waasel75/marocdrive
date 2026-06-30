@@ -122,8 +122,9 @@ window.addEventListener('db-synced', () => {
 
 /* ===================== CARS TAB ===================== */
 function renderCarsGrid() {
-  const cars = getCars();
   const grid = document.getElementById('sCarsGrid');
+  if (!grid) return; // section "Voitures" retirée — gestion 100% via le CRM
+  const cars = getCars();
   grid.innerHTML = '';
 
   // Add-car button row

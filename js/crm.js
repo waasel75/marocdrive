@@ -105,6 +105,7 @@ function crmLogout() {
 /* ── INIT ── */
 async function initApp() {
   await syncNow();
+  syncVehiclesToCars(); // le site reflète la flotte du CRM dès l'ouverture
   navigate('dashboard');
   setInterval(async () => { await syncNow(); renderCurrent(); }, 30000);
   renderNotifBadge();
@@ -865,7 +866,40 @@ const VSTATUS = {
   accident:    { label:'Accidenté',    icon:'🚨', cls:'cancelled' },
 };
 function getVehicles() { return JSON.parse(localStorage.getItem('md_vehicles')||'[]'); }
-function saveVehicles(v) { localStorage.setItem('md_vehicles', JSON.stringify(v)); }
+function saveVehicles(v) { localStorage.setItem('md_vehicles', JSON.stringify(v)); syncVehiclesToCars(); }
+
+/* ── SITE FLEET SYNC ──
+   Le CRM est la seule source de vérité des véhicules. À chaque modification on
+   régénère `md_cars` (lu par le site web, les offres et le calendrier) à partir
+   de `md_vehicles`. Toute voiture ajoutée/modifiée/supprimée ici s'affiche
+   automatiquement sur le site. */
+const VEH_CATEGORIES = { economy:'Économique', suv:'SUV', premium:'Premium', electric:'Électrique' };
+const VEH_BADGES = { '':'Aucun', popular:'Populaire', bestseller:'Best Seller', premium:'Premium', eco:'Éco', hybrid:'Hybride', luxury:'Luxe' };
+
+function vehicleToCar(v) {
+  const imgs = (v.images || []).filter(Boolean);
+  const specs = ['5 places'];
+  if (v.gearbox) specs.push(v.gearbox);
+  if (v.fuel)    specs.push(v.fuel);
+  specs.push('Climatisation');
+  const model = [v.year, v.fuel].filter(Boolean).join(' — ') || (v.brand || v.model || '');
+  return {
+    id: v.id,
+    name: v.name,
+    model,
+    category: v.category || 'economy',
+    emoji: '🚗',
+    price: +v.price || 0,
+    photo: imgs[0] || '',
+    gallery: imgs.slice(1).map(u => ({ url: u, active: true })),
+    specsKey: specs,
+    badgeKey: v.badge || null,
+  };
+}
+function syncVehiclesToCars() {
+  const cars = JSON.parse(localStorage.getItem('md_vehicles') || '[]').map(vehicleToCar);
+  localStorage.setItem('md_cars', JSON.stringify(cars)); // db.js pushe vers Supabase → le site se met à jour
+}
 
 function vehicleReservations(name) {
   return getRes().filter(r => r.car===name && r.status!=='cancelled' && r.start && r.end)
@@ -960,6 +994,12 @@ function openVehicleModal(id) {
           <button type="button" onclick="removeVehicleImage(${i})" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:.6rem;cursor:pointer">✕</button></div>`).join('')}
       </div>
     </div>
+    <div class="crm-fg"><label>Catégorie (affichage site web)</label>
+      <select id="vh_category">${Object.entries(VEH_CATEGORIES).map(([k,l])=>`<option value="${k}" ${v&&v.category===k?'selected':''}>${l}</option>`).join('')}</select>
+    </div>
+    <div class="crm-fg"><label>Badge (affichage site web)</label>
+      <select id="vh_badge">${Object.entries(VEH_BADGES).map(([k,l])=>`<option value="${k}" ${v&&(v.badge||'')===k?'selected':''}>${l}</option>`).join('')}</select>
+    </div>
     <div class="crm-fg"><label>Statut</label>
       <select id="vh_status">${Object.entries(VSTATUS).map(([k,s])=>`<option value="${k}" ${v&&v.status===k?'selected':''}>${s.icon} ${s.label}</option>`).join('')}</select>
     </div>
@@ -985,6 +1025,8 @@ function saveVehicle(id) {
   const data = {};
   VFIELDS.forEach(([key])=> data[key] = document.getElementById('vh_'+key).value.trim());
   data.status = document.getElementById('vh_status').value;
+  data.category = document.getElementById('vh_category').value;
+  data.badge = document.getElementById('vh_badge').value;
   data.note = document.getElementById('vh_note').value.trim();
   data.images = window._vehImagesTemp || [];
   if (!data.name) { toast('⚠️ Nom du véhicule requis'); return; }

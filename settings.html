@@ -73,10 +73,7 @@
       <option value="es">🇪🇸 Español</option><option value="ar">🇲🇦 العربية</option>
     </select>
     <nav class="s-nav">
-      <button class="s-nav-btn active" onclick="sTab('cars',this)">
-        <span class="s-nav-icon">🚗</span> <span data-pt="nav-cars">Voitures</span>
-      </button>
-      <button class="s-nav-btn" onclick="sTab('reservations',this)">
+      <button class="s-nav-btn active" onclick="sTab('reservations',this)">
         <span class="s-nav-icon">📅</span> <span data-pt="nav-res">Réservations</span>
       </button>
       <button class="s-nav-btn" onclick="sTab('chatbot',this)">
@@ -102,17 +99,8 @@
   <!-- Content -->
   <main class="s-main">
 
-    <!-- TAB: CARS -->
-    <div class="s-tab" id="tabCars">
-      <div class="s-page-header">
-        <h1 data-pt="h-cars-t">Gestion des véhicules</h1>
-        <p data-pt="h-cars-s">Modifiez les photos, prix et informations de chaque véhicule</p>
-      </div>
-      <div class="s-cars-grid" id="sCarsGrid"></div>
-    </div>
-
     <!-- TAB: RESERVATIONS -->
-    <div class="s-tab" id="tabReservations" style="display:none">
+    <div class="s-tab" id="tabReservations">
       <div class="s-page-header">
         <h1 data-pt="h-res-t">Gestion des réservations</h1>
         <p data-pt="h-res-s">Bloquez ou libérez des dates pour chaque véhicule</p>
