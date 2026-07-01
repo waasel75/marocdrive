@@ -66,6 +66,16 @@ const PANEL_LANGS = {
     titles:{dashboard:'لوحة التحكم',reservations:'الحجوزات',vehicles:'🚙 السيارات',vidange:'🛢️ الفيدانج',stats:'الإحصائيات',chats:'المحادثات'} },
 };
 
+/* Clés supplémentaires (CRM) fusionnées sans toucher aux tables de base */
+Object.assign(PANEL_LANGS.fr, {'nav-clients':'Clients','nav-availability':'Disponibilité','admin-panel':'Admin Panel','crm-h':'Connexion CRM','crm-sub':'Accès réservé aux administrateurs'});
+Object.assign(PANEL_LANGS.en, {'nav-clients':'Clients','nav-availability':'Availability','admin-panel':'Admin Panel','crm-h':'CRM Login','crm-sub':'Administrators only'});
+Object.assign(PANEL_LANGS.es, {'nav-clients':'Clientes','nav-availability':'Disponibilidad','admin-panel':'Panel Admin','crm-h':'Acceso CRM','crm-sub':'Solo administradores'});
+Object.assign(PANEL_LANGS.ar, {'nav-clients':'العملاء','nav-availability':'التوفر','admin-panel':'لوحة الأدمين','crm-h':'دخول CRM','crm-sub':'مخصص للمشرفين فقط'});
+PANEL_LANGS.fr.titles = Object.assign({clients:'Clients',availability:'Disponibilité'}, PANEL_LANGS.fr.titles);
+PANEL_LANGS.en.titles = Object.assign({clients:'Clients',availability:'Availability'}, PANEL_LANGS.en.titles);
+PANEL_LANGS.es.titles = Object.assign({clients:'Clientes',availability:'Disponibilidad'}, PANEL_LANGS.es.titles);
+PANEL_LANGS.ar.titles = Object.assign({clients:'العملاء',availability:'التوفر'}, PANEL_LANGS.ar.titles);
+
 function curLang() { return localStorage.getItem('md_panel_lang') || 'fr'; }
 function T(key) { const L = PANEL_LANGS[curLang()] || PANEL_LANGS.fr; return L[key] != null ? L[key] : (PANEL_LANGS.fr[key] || key); }
 
@@ -78,10 +88,12 @@ function applyPanelLang(code) {
     const v = L[el.dataset.pt];
     if (v) el.textContent = v;
   });
-  const sel = document.getElementById('panelLangSel');
-  if (sel) sel.value = code;
+  document.querySelectorAll('#panelLangSel, .panelLangSel').forEach(sel => { sel.value = code; });
   const pageTitle = document.getElementById('pageTitle');
   if (pageTitle && window.currentAdminTab) pageTitle.textContent = (L.titles && L.titles[window.currentAdminTab]) || pageTitle.textContent;
+  // Titre de la barre du CRM (section active)
+  const crmTitle = document.getElementById('topbarTitle');
+  if (crmTitle && window.currentCrmSection && L.titles && L.titles[window.currentCrmSection]) crmTitle.textContent = L.titles[window.currentCrmSection];
   if (window.currentAdminTab && typeof showTab === 'function' && document.getElementById('app')?.style.display !== 'none') {
     const activeLink = document.querySelector('.sb-link.active');
     if (activeLink) showTab(window.currentAdminTab, activeLink);
@@ -90,4 +102,10 @@ function applyPanelLang(code) {
 
 document.addEventListener('DOMContentLoaded', () => {
   applyPanelLang(localStorage.getItem('md_panel_lang') || 'fr');
+});
+
+// Synchronisation live entre panneaux ouverts : changer la langue dans un
+// panneau l'applique instantanément dans tous les autres onglets ouverts.
+window.addEventListener('storage', e => {
+  if (e.key === 'md_panel_lang' && e.newValue) applyPanelLang(e.newValue);
 });

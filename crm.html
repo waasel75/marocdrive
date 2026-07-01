@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/crm.css?v=20260626"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <script src="js/auth.js?v=20260626"></script>
+  <script src="js/panel-lang.js?v=20260701"></script>
 </head>
 <body>
 
@@ -15,8 +16,12 @@
 <div class="crm-login" id="crmLoginScreen">
   <div class="crm-login-box">
     <div class="crm-login-logo"><img src="images/logo.png" alt="Chakroun Cars" style="height:32px;width:auto;vertical-align:middle"/> <span>CRM</span></div>
-    <h2>Connexion CRM</h2>
-    <p>Accès réservé aux administrateurs</p>
+    <select id="panelLangSel" onchange="applyPanelLang(this.value)" style="width:100%;margin:0 0 14px;background:#1a1d24;color:#fff;border:1px solid #333;border-radius:6px;padding:6px">
+      <option value="fr">🇫🇷 Français</option><option value="en">🇬🇧 English</option>
+      <option value="es">🇪🇸 Español</option><option value="ar">🇲🇦 العربية</option>
+    </select>
+    <h2 data-pt="crm-h">Connexion CRM</h2>
+    <p data-pt="crm-sub">Accès réservé aux administrateurs</p>
     <div class="crm-fg">
       <label>Identifiant</label>
       <input type="text" id="crmUser" placeholder="Votre identifiant" autocomplete="username"/>
@@ -44,35 +49,39 @@
       <img src="images/logo.png" alt="Chakroun Cars" style="height:28px;width:auto;display:block"/>
       <span class="logo-label" style="font-size:.7rem;color:var(--accent);font-weight:700;letter-spacing:1px">CRM</span>
     </div>
+    <select id="panelLangSel" onchange="applyPanelLang(this.value)" style="width:calc(100% - 20px);margin:0 10px 10px;background:#1a1d24;color:#fff;border:1px solid #333;border-radius:6px;padding:6px">
+      <option value="fr">🇫🇷 Français</option><option value="en">🇬🇧 English</option>
+      <option value="es">🇪🇸 Español</option><option value="ar">🇲🇦 العربية</option>
+    </select>
     <nav class="crm-nav">
       <button class="crm-nav-item" data-section="dashboard" onclick="navigate('dashboard')">
-        <span class="crm-nav-icon">📊</span><span class="nav-label">Tableau de bord</span>
+        <span class="crm-nav-icon">📊</span><span class="nav-label" data-pt="nav-dash">Tableau de bord</span>
       </button>
       <button class="crm-nav-item" data-section="clients" onclick="navigate('clients')">
-        <span class="crm-nav-icon">👥</span><span class="nav-label">Clients</span>
+        <span class="crm-nav-icon">👥</span><span class="nav-label" data-pt="nav-clients">Clients</span>
       </button>
       <button class="crm-nav-item" data-section="reservations" onclick="navigate('reservations')">
-        <span class="crm-nav-icon">📋</span><span class="nav-label">Réservations</span>
+        <span class="crm-nav-icon">📋</span><span class="nav-label" data-pt="nav-res">Réservations</span>
       </button>
       <button class="crm-nav-item" data-section="vehicles" onclick="navigate('vehicles')">
-        <span class="crm-nav-icon">🚙</span><span class="nav-label">Véhicules</span>
+        <span class="crm-nav-icon">🚙</span><span class="nav-label" data-pt="nav-vehicles">Véhicules</span>
       </button>
       <button class="crm-nav-item" data-section="availability" onclick="navigate('availability')">
-        <span class="crm-nav-icon">📅</span><span class="nav-label">Disponibilité</span>
+        <span class="crm-nav-icon">📅</span><span class="nav-label" data-pt="nav-availability">Disponibilité</span>
       </button>
       <button class="crm-nav-item" data-section="vidange" onclick="navigate('vidange')">
-        <span class="crm-nav-icon">🛢️</span><span class="nav-label">Vidange</span>
+        <span class="crm-nav-icon">🛢️</span><span class="nav-label" data-pt="nav-vidange">Vidange</span>
       </button>
       <button class="crm-nav-item" data-section="stats" onclick="navigate('stats')">
-        <span class="crm-nav-icon">📈</span><span class="nav-label">Statistiques</span>
+        <span class="crm-nav-icon">📈</span><span class="nav-label" data-pt="nav-stats">Statistiques</span>
       </button>
     </nav>
     <div class="crm-sidebar-footer">
       <button onclick="window.open('admin.html','_blank')">
-        <span class="crm-nav-icon">⚙️</span><span class="nav-label footer-label">Admin Panel</span>
+        <span class="crm-nav-icon">⚙️</span><span class="nav-label footer-label" data-pt="admin-panel">Admin Panel</span>
       </button>
       <button onclick="crmLogout()">
-        <span class="crm-nav-icon">🚪</span><span class="nav-label footer-label">Déconnexion</span>
+        <span class="crm-nav-icon">🚪</span><span class="nav-label footer-label" data-pt="logout">Déconnexion</span>
       </button>
     </div>
   </aside>

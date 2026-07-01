@@ -126,13 +126,15 @@ function renderCurrent() {
 
 function navigate(section) {
   _currentSection = section;
+  window.currentCrmSection = section; // pour la traduction du titre (panel-lang)
   document.querySelectorAll('.crm-nav-item').forEach(el => {
     el.classList.toggle('active', el.dataset.section === section);
   });
   document.querySelectorAll('.crm-section').forEach(el => {
     el.classList.toggle('active', el.id === 'sec-' + section);
   });
-  const titles = { dashboard:'Tableau de bord', clients:'Clients', reservations:'Réservations', vehicles:'Véhicules', availability:'Disponibilité', vidange:'Vidange', stats:'Statistiques' };
+  const pl = (typeof PANEL_LANGS !== 'undefined' && typeof curLang === 'function') ? PANEL_LANGS[curLang()] : null;
+  const titles = (pl && pl.titles) || { dashboard:'Tableau de bord', clients:'Clients', reservations:'Réservations', vehicles:'Véhicules', availability:'Disponibilité', vidange:'Vidange', stats:'Statistiques' };
   document.getElementById('topbarTitle').textContent = titles[section] || '';
   renderCurrent();
 }

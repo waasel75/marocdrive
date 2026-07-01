@@ -67,6 +67,10 @@
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-logo" id="brandSbLogo"><img src="images/logo.png" alt="Chakroun Cars" style="height:30px;width:auto;display:block"/></div>
+    <select id="panelLangSel" onchange="applyPanelLang(this.value)" style="width:calc(100% - 20px);margin:0 10px 10px;background:#1a1d24;color:#fff;border:1px solid #333;border-radius:6px;padding:6px">
+      <option value="fr">🇫🇷 Français</option><option value="en">🇬🇧 English</option>
+      <option value="es">🇪🇸 Español</option><option value="ar">🇲🇦 العربية</option>
+    </select>
     <nav class="sb-nav">
       <button class="sb-link active" onclick="showTab('dashboard',this)"><span class="sb-icon">🏠</span><span class="sb-txt">Dashboard</span></button>
       <button class="sb-link" onclick="showTab('reservations',this)"><span class="sb-icon">📋</span><span class="sb-txt">Réservations</span></button>
